@@ -1,5 +1,7 @@
 # Navigation Flow Diagram — Smart Student Planner
 
+![Navigation Flow Diagram](images/navigation_flow_diagram.png)
+
 ## Screen Transition Map
 
 ```
