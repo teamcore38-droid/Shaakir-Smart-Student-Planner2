@@ -49,6 +49,9 @@ The application follows an **Apple HIG-inspired light & clean** aesthetic:
 ```
 
 ### 2. Dashboard (Home)
+
+![Dashboard Wireframe](images/dashboard_wireframe.png)
+
 ```
 ┌─────────────────────────┐
 │ Good Morning       (A)  │  A = avatar initial
