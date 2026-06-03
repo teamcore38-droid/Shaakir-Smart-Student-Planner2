@@ -16,6 +16,8 @@ The application follows an **Apple HIG-inspired light & clean** aesthetic:
 ## Screen Wireframes
 
 ### 1. Login Screen
+
+![Login Wireframe](images/login_wireframe.png)
 ```
 ┌─────────────────────────┐
 │                         │
@@ -84,6 +86,8 @@ The application follows an **Apple HIG-inspired light & clean** aesthetic:
 ```
 
 ### 3. Task List
+
+![Task List Wireframe](images/task_list_wireframe.png)
 ```
 ┌─────────────────────────┐
 │ My Tasks         ↕ (+)  │
@@ -108,6 +112,8 @@ The application follows an **Apple HIG-inspired light & clean** aesthetic:
 ```
 
 ### 4. Add Task Form
+
+![Add Task Wireframe](images/add_task_wireframe.png)
 ```
 ┌─────────────────────────┐
 │ ← New Task              │
@@ -144,6 +150,8 @@ The application follows an **Apple HIG-inspired light & clean** aesthetic:
 ```
 
 ### 5. Task Detail
+
+![Task Detail Wireframe](images/task_detail_wireframe.png)
 ```
 ┌─────────────────────────┐
 │ ← Task Details          │
@@ -173,6 +181,10 @@ The application follows an **Apple HIG-inspired light & clean** aesthetic:
 │ [ Edit ✏ ]  [ Delete 🗑]│
 └─────────────────────────┘
 ```
+
+### 6. Settings Screen
+
+![Settings Wireframe](images/settings_wireframe.png)
 
 ---
 
