@@ -9,12 +9,13 @@
  *   - Polished notes card and primary/secondary button containers
  */
 
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Dimensions, StatusBar, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Dimensions, StatusBar, Platform, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTasks } from '../context/TaskContext';
 import PriorityBadge from '../components/PriorityBadge';
 import CustomButton from '../components/CustomButton';
+import AIService from '../services/AIService';
 import { COLORS, SPACING, FONT_SIZES, FONT_WEIGHTS, BORDER_RADIUS, SHADOWS } from '../theme/theme';
 import { formatDate, getDaysRemaining } from '../utils/helpers';
 
@@ -22,7 +23,9 @@ const { width } = Dimensions.get('window');
 
 const TaskDetailScreen = ({ route, navigation }) => {
   const { taskId } = route.params;
-  const { getTaskById, deleteTask, toggleTaskComplete } = useTasks();
+  const { getTaskById, deleteTask, toggleTaskComplete, editTask } = useTasks();
+
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const task = getTaskById(taskId);
 
@@ -58,6 +61,57 @@ const TaskDetailScreen = ({ route, navigation }) => {
 
   const handleToggle = async () => {
     await toggleTaskComplete(taskId);
+  };
+
+  const handleGenerateSubTasks = async () => {
+    setIsGenerating(true);
+    const result = await AIService.generateSubTasks(task.title, task.notes);
+    setIsGenerating(false);
+
+    if (result.success) {
+      // Map generated strings to sub-task schema: { text: string, completed: boolean }
+      const newSubTasks = result.subTasks.map((step) => ({
+        text: step,
+        completed: false,
+      }));
+      
+      const updateResult = await editTask(taskId, { subTasks: newSubTasks });
+      if (!updateResult.success) {
+        Alert.alert('Error', 'Failed to save study steps to database.');
+      }
+    } else {
+      Alert.alert('AI Breakdown Failed', result.error);
+    }
+  };
+
+  const toggleSubTask = async (index) => {
+    if (!task.subTasks) return;
+    
+    const updatedSubTasks = task.subTasks.map((item, idx) => {
+      if (idx === index) {
+        return { ...item, completed: !item.completed };
+      }
+      return item;
+    });
+
+    await editTask(taskId, { subTasks: updatedSubTasks });
+  };
+
+  const handleDeleteSubTasks = () => {
+    Alert.alert(
+      'Remove Study Steps',
+      'Are you sure you want to delete the AI-generated study checklist?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await editTask(taskId, { subTasks: [] });
+          },
+        },
+      ]
+    );
   };
 
   // Redesigned Detail Row
@@ -143,6 +197,74 @@ const TaskDetailScreen = ({ route, navigation }) => {
             <Text style={styles.notesText}>{task.notes}</Text>
           </View>
         ) : null}
+
+        {/* AI Study Steps Decomposer */}
+        {!task.completed && (
+          <View style={[styles.aiCard, styles.cardShadow]}>
+            <View style={styles.aiHeader}>
+              <View style={styles.aiTitleGroup}>
+                <Ionicons name="sparkles-outline" size={18} color="#8B5CF6" />
+                <Text style={styles.aiTitle}>AI Study Steps</Text>
+              </View>
+              {task.subTasks && task.subTasks.length > 0 && (
+                <TouchableOpacity onPress={handleDeleteSubTasks} activeOpacity={0.7}>
+                  <Ionicons name="trash-outline" size={18} color="#EF4444" />
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {isGenerating ? (
+              <View style={styles.aiLoader}>
+                <ActivityIndicator size="small" color="#8B5CF6" />
+                <Text style={styles.aiLoaderText}>Decomposing task with AI...</Text>
+              </View>
+            ) : task.subTasks && task.subTasks.length > 0 ? (
+              <View>
+                {/* Progress Metric */}
+                <Text style={styles.aiProgressText}>
+                  {task.subTasks.filter(st => st.completed).length} of {task.subTasks.length} steps completed
+                </Text>
+                
+                {/* Steps List */}
+                {task.subTasks.map((step, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.subTaskRow}
+                    activeOpacity={0.8}
+                    onPress={() => toggleSubTask(index)}
+                  >
+                    <Ionicons
+                      name={step.completed ? "checkmark-circle" : "ellipse-outline"}
+                      size={20}
+                      color={step.completed ? "#10B981" : "#94A3B8"}
+                      style={styles.subTaskCheckbox}
+                    />
+                    <Text style={[
+                      styles.subTaskText,
+                      step.completed && styles.subTaskTextCompleted
+                    ]}>
+                      {step.text}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : (
+              <View style={styles.aiEmptyState}>
+                <Text style={styles.aiDescription}>
+                  Let AI analyze this task to break it down into 4-5 actionable steps.
+                </Text>
+                <TouchableOpacity
+                  style={styles.aiBtn}
+                  activeOpacity={0.85}
+                  onPress={handleGenerateSubTasks}
+                >
+                  <Ionicons name="sparkles" size={16} color="#FFFFFF" style={{ marginRight: 6 }} />
+                  <Text style={styles.aiBtnText}>Break Down with AI</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        )}
 
         {/* Action Controls */}
         <View style={styles.actions}>
@@ -341,6 +463,101 @@ const styles = StyleSheet.create({
     height: 50,
     paddingVertical: 0,
     borderRadius: 25,
+  },
+  aiCard: {
+    backgroundColor: '#FFFFFF', 
+    borderRadius: 20, 
+    padding: SPACING.lg, 
+    marginBottom: SPACING.xl 
+  },
+  aiHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  aiTitleGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  aiTitle: {
+    fontSize: FONT_SIZES.md - 1, 
+    fontWeight: '700', 
+    color: '#1E293B', 
+  },
+  aiLoader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: SPACING.lg,
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    width: '100%'
+  },
+  aiLoaderText: {
+    fontSize: FONT_SIZES.sm,
+    color: '#8B5CF6',
+    fontWeight: '600',
+  },
+  aiProgressText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#94A3B8',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: SPACING.sm,
+  },
+  subTaskRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: SPACING.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F8FAFC',
+  },
+  subTaskCheckbox: {
+    marginRight: SPACING.sm,
+  },
+  subTaskText: {
+    fontSize: FONT_SIZES.md - 1,
+    color: '#475569',
+    fontWeight: '500',
+    flex: 1,
+  },
+  subTaskTextCompleted: {
+    textDecorationLine: 'line-through',
+    color: '#94A3B8',
+  },
+  aiEmptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: SPACING.xs,
+  },
+  aiDescription: {
+    fontSize: FONT_SIZES.sm,
+    color: '#64748B',
+    textAlign: 'center',
+    marginBottom: SPACING.md,
+    fontWeight: '500',
+    lineHeight: 18,
+  },
+  aiBtn: {
+    backgroundColor: '#8B5CF6',
+    height: 40,
+    borderRadius: 20,
+    paddingHorizontal: SPACING.lg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#8B5CF6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  aiBtnText: {
+    color: '#FFFFFF',
+    fontSize: FONT_SIZES.sm,
+    fontWeight: '700',
   },
 });
 
