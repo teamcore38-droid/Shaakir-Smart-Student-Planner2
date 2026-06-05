@@ -5,11 +5,12 @@
  * into manageable checklists of actionable sub-tasks.
  */
 
-// Placeholder for Google Gemini API key.
-// Paste your free API key from Google AI Studio here!
-const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY";
+// Paste your free API key from Google AI Studio here or set EXPO_PUBLIC_GEMINI_API_KEY in a .env file!
+const HARDCODED_API_KEY = "YOUR_GEMINI_API_KEY";
 
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY || HARDCODED_API_KEY;
+
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 class AIService {
   /**
@@ -20,7 +21,7 @@ class AIService {
     if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_GEMINI_API_KEY") {
       return { 
         success: false, 
-        error: "Google Gemini API key is missing. Please add your key to AIService.js." 
+        error: "Google Gemini API key is missing. Please add your key to a .env file (EXPO_PUBLIC_GEMINI_API_KEY) or directly to AIService.js." 
       };
     }
 
