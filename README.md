@@ -18,6 +18,82 @@ A premium, Apple HIG-inspired mobile application for academic task management, b
 
 ---
 
+## Application Screen Gallery
+
+### 📱 Onboarding & Splash Flow
+<table>
+  <tr>
+    <td><img src="docs/Screenshots/01_splash_screen.jpeg" width="180" alt="Splash Screen" /></td>
+    <td><img src="docs/Screenshots/02_onboarding_1.jpeg" width="180" alt="Onboarding 1" /></td>
+    <td><img src="docs/Screenshots/03_onboarding_2.jpeg" width="180" alt="Onboarding 2" /></td>
+    <td><img src="docs/Screenshots/05_onboarding_3.jpeg" width="180" alt="Onboarding 3" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>01. Launch Splash</b></td>
+    <td align="center"><b>02. Organize View</b></td>
+    <td align="center"><b>03. Progress Metric</b></td>
+    <td align="center"><b>04. Alert Notification</b></td>
+  </tr>
+</table>
+
+### 🔑 Authentication & Landing
+<table>
+  <tr>
+    <td><img src="docs/Screenshots/06_welcome_screen.jpeg" width="180" alt="Welcome Landing" /></td>
+    <td><img src="docs/Screenshots/07_login_screen.jpeg" width="180" alt="Login Portal" /></td>
+    <td><img src="docs/Screenshots/08_register_screen.jpeg" width="180" alt="Register Portal" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>05. Welcome Landing</b></td>
+    <td align="center"><b>06. Login Screen</b></td>
+    <td align="center"><b>07. Register Screen</b></td>
+  </tr>
+</table>
+
+### 📈 Core Dashboard & Filters
+<table>
+  <tr>
+    <td><img src="docs/Screenshots/09_dashboard.jpeg" width="180" alt="Dashboard" /></td>
+    <td><img src="docs/Screenshots/10_task_filter_modal.jpeg" width="180" alt="Filter Modal" /></td>
+    <td><img src="docs/Screenshots/11_add_task.jpeg" width="180" alt="Add Task Form" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>08. Progress Dashboard</b></td>
+    <td align="center"><b>09. Interactive Filters</b></td>
+    <td align="center"><b>10. Add Task Creator</b></td>
+  </tr>
+</table>
+
+### 🤖 Task Details & AI breakdown Flow (PLO 6.5)
+<table>
+  <tr>
+    <td><img src="docs/Screenshots/12_task_detail_high.jpeg" width="180" alt="Task Details High" /></td>
+    <td><img src="docs/Screenshots/14_task_detail_ai_prompt.jpeg" width="180" alt="AI breakdown Prompt" /></td>
+    <td><img src="docs/Screenshots/16_task_detail_ai_checklist.jpeg" width="180" alt="AI Checklist" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>11. Detailed Task Spec</b></td>
+    <td align="center"><b>12. AI Breakdown Prompt</b></td>
+    <td align="center"><b>13. AI Checklist Generated</b></td>
+  </tr>
+</table>
+
+### ⚙️ Profile & System Settings
+<table>
+  <tr>
+    <td><img src="docs/Screenshots/17_profile.jpeg" width="180" alt="Profile" /></td>
+    <td><img src="docs/Screenshots/18_settings_preferences.jpeg" width="180" alt="Settings Preferences" /></td>
+    <td><img src="docs/Screenshots/20_settings_custom_modules_modal.jpeg" width="180" alt="Custom Modules Manager" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>14. Profile Stats</b></td>
+    <td align="center"><b>15. Settings Panel</b></td>
+    <td align="center"><b>16. Custom Modules manager</b></td>
+  </tr>
+</table>
+
+---
+
 ## Tech Stack
 
 | Technology | Version | Purpose |
