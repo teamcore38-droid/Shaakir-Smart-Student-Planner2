@@ -28,3 +28,9 @@ npm-debug.log*
 
 # Testing
 coverage/
+
+# Temporary and log files
+~$*
+*.tmp
+.expo-run.err
+
